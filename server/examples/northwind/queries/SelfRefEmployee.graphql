@@ -1,0 +1,13 @@
+query SelfRefEmployee {
+  viewer {
+    employeeList {
+      firstName
+      subordinates {
+        firstName
+      }
+      chief {
+        firstName
+      }
+    }
+  }
+}

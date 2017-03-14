@@ -1,0 +1,25 @@
+query OrderDetails {
+  viewer {
+    orderConnection(first: 3) {
+      count
+      edges {
+        node {
+          orderID
+          customer {
+            companyName
+            contactName
+          }
+          details {
+            unitPrice
+            quantity
+            product {
+              name
+              unitsInStock
+              discontinued
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const CONFIG = require('./webpack.base')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const { CLIENT_ENTRY, CLIENT_OUTPUT, PUBLIC_PATH } = CONFIG
 
@@ -18,7 +19,7 @@ module.exports = {
       'react-router',
       'redux',
       'react-redux',
-      'aphrodite'
+      'fela'
     ]
   },
   output: {
@@ -38,6 +39,10 @@ module.exports = {
     ],
     loaders: [
       {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+      {
         test: /\.js$/,
         loader: 'babel',
         exclude: /(node_modules|server)/,
@@ -46,6 +51,13 @@ module.exports = {
           presets: ["es2015", "react", "stage-0"]
         }
       },
+      {
+        test: /\.(ttf|eot|woff|woff2)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 100000
+        }
+      }
     ]
   },
   standard: {

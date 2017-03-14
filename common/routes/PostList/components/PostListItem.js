@@ -1,12 +1,23 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { StyleSheet, css } from 'aphrodite'
+import { StyleSheet } from 'fela-tools'
+import { connect } from 'react-fela'
 
-const PostListItem = ({ post }) => (
-  <div className={css(styles.root)}>
-    <h3><Link to={`/post/${post.slug}`} className={css(styles.title)}> {post.title} </Link></h3>
-  </div>
-)
+const PostListItem = ({ post, styles }, {renderer}) => {
+  const css = (rule) => renderer.renderRule(rule)
+  return (
+    <div className={css(styles.root)}>
+      <h3><Link to={`/post/${post.slug}`} className={css(styles.title)}> {post.title} </Link></h3>
+    </div>
+  )
+}
+
+PostListItem.contextTypes = { renderer: PropTypes.object }
+
+PostListItem.propTypes = {
+  post: PropTypes.object,
+  styles: PropTypes.object
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -25,4 +36,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default PostListItem
+const mapStylesToProps = props => renderer => (styles)
+
+export default connect(mapStylesToProps)(PostListItem)

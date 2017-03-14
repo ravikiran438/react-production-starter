@@ -1,19 +1,31 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import IndexLink from 'react-router/lib/IndexLink'
 import Link from 'react-router/lib/Link'
-import { StyleSheet, css } from 'aphrodite'
+import { StyleSheet } from 'fela-tools'
+import { connect } from 'react-fela'
+import { combineRules } from 'fela'
 
-const Nav = () => (
-  <div>
-    <IndexLink to='/' className={css(styles.link)} activeClassName={css(styles.link, styles.activeLink)}>
-      Home
-    </IndexLink>
-    <Link to='/posts' className={css(styles.link)} activeClassName={css(styles.link, styles.activeLink)}> Example Feed
-    </Link>
-    <a href='https://github.com/jaredpalmer/react-production-starter' className={css(styles.link)} target='_blank'>GitHub</a>
-    <a href='https://twitter.com/jaredpalmer' className={css(styles.link)} target='_blank'>Twitter</a>
-  </div>
-)
+const Nav = ({styles}, {renderer}) => {
+  const css = (rule) => renderer.renderRule(rule)
+  const activeLinkRule = css(combineRules(styles.link, styles.activeLink))
+  return (
+    <div>
+      <IndexLink to='/' className={css(styles.link)} activeClassName={activeLinkRule}>
+        Home
+      </IndexLink>
+      <Link to='/posts' className={css(styles.link)} activeClassName={activeLinkRule}> Example Feed
+      </Link>
+      <a href='https://github.com/jaredpalmer/react-production-starter' className={css(styles.link)} target='_blank'>GitHub</a>
+      <a href='https://twitter.com/jaredpalmer' className={css(styles.link)} target='_blank'>Twitter</a>
+    </div>
+  )
+}
+
+Nav.contextTypes = { renderer: PropTypes.object }
+
+Nav.propTypes = {
+  styles: PropTypes.object
+}
 
 const styles = StyleSheet.create({
   link: {
@@ -33,4 +45,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Nav
+const mapStylesToProps = props => renderer => (styles)
+
+export default connect(mapStylesToProps)(Nav)

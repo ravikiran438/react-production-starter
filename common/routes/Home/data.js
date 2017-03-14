@@ -24,9 +24,9 @@ const data = [
     link: 'https://github.com/reactjs/react-router',
     description: 'A complete routing solution for React.js'
   },
-  { resource: 'Aphrodite for CSS',
-    link: 'https://github.com/Khan/aphrodite',
-    description: "Support for colocating your styles with your JavaScript component. It's inline styles, but they work!"
+  { resource: 'Fela for CSS',
+    link: 'https://github.com/rofrischmann/fela',
+    description: 'Full-Featured Universal, Dynamic & High-Performance Styling in JavaScript'
   },
   {
     resource: 'React Helmet',

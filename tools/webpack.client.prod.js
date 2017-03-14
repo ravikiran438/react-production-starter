@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const AssetsPlugin = require('assets-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const CONFIG = require('./webpack.base')
 const { CLIENT_ENTRY, CLIENT_OUTPUT, PUBLIC_PATH } = CONFIG
@@ -15,7 +16,7 @@ module.exports = {
       'react-router',
       'redux',
       'react-redux',
-      'aphrodite'
+      'fela'
     ],
   },
   output: {
@@ -48,9 +49,21 @@ module.exports = {
       }
     }),
     new webpack.NoErrorsPlugin(),
+    new CopyWebpackPlugin(
+      [
+        {
+          from: './client/fonts/',
+          to: 'fonts'
+        }
+      ]
+    )
   ],
   module: {
     loaders: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
       {
         test: /\.js$/,
         loader: 'babel',
@@ -59,6 +72,13 @@ module.exports = {
           presets: ["es2015", "react", "stage-0", "react-optimize"],
         },
         exclude: /(node_modules)/
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 100000
+        }
       }
     ]
   }

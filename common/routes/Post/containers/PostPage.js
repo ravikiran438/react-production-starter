@@ -1,8 +1,10 @@
 import { provideHooks } from 'redial'
 import React, { PropTypes } from 'react'
+import { compose } from 'ramda'
 import { connect } from 'react-redux'
 import { loadPost } from '../actions'
-import { StyleSheet, css } from 'aphrodite'
+import { connect as connectFela } from 'react-fela'
+import { StyleSheet } from 'fela-tools'
 import Helmet from 'react-helmet'
 import NotFound from '../../../components/NotFound'
 import { selectCurrentPost } from '../reducer'
@@ -13,7 +15,8 @@ const redial = {
 
 const mapStateToProps = state => selectCurrentPost(state)
 
-const PostPage = ({ title, content, isLoading, error }) => {
+const PostPage = ({ title, content, isLoading, error, styles }, {renderer}) => {
+  const css = (rule) => renderer.renderRule(rule)
   if (!error) {
     return (
       <div>
@@ -35,11 +38,14 @@ const PostPage = ({ title, content, isLoading, error }) => {
   }
 }
 
+PostPage.contextTypes = { renderer: PropTypes.object }
+
 PostPage.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   isLoading: PropTypes.bool,
-  error: PropTypes.object
+  error: PropTypes.object,
+  styles: PropTypes.object
 }
 
 const styles = StyleSheet.create({
@@ -61,4 +67,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default provideHooks(redial)(connect(mapStateToProps)(PostPage))
+const mapStylesToProps = props => renderer => (styles)
+
+export default provideHooks(redial)(compose(connect(mapStateToProps), connectFela(mapStylesToProps))(PostPage))

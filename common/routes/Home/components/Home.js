@@ -1,33 +1,43 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
-import { StyleSheet, css } from 'aphrodite'
+import { StyleSheet } from 'fela-tools'
+import { connect } from 'react-fela'
 import data from '../data'
 
 // This is a static page. It uses an array to hold data about the resources
 // and maintain DRY
-const Home = (props) => (
-  <div>
+const Home = ({styles}, {renderer}) => {
+  const css = (rule) => renderer.renderRule(rule)
+  return (
+    <div>
 
-    <h2 className={css(styles.header)}>About</h2>
-    <p className={css(styles.lead)}>
-      This is an example react application (master-detail feed) with isomorphic rendering, async react-router routes, async redux reducers, async data fetching, and code-splitting.
-    </p>
-    <h2 className={css(styles.header)}>Motivation</h2>
-    <p className={css(styles.lead)}>
-      The file size of isomorphic React apps can quickly get out of hand. Many isomorphic starter kits look awesome to begin with but yield a several megabyte javascript
-      file for the client to download. This project aims to demonstrate some possible solutions.
-    </p>
-    <h2 className={css(styles.header)}>Under the Hood</h2>
-    <ul className={css(styles.list)}>
-      {data.map((item, i) => (
-        <li key={i}>
-          <h3><a className={css(styles.link)} href={item.link} target='_blank'>{item.resource}</a></h3>
-          <p className={css(styles.body)}>{item.description}</p>
-        </li>
-       ))}
-    </ul>
-  </div>
-)
+      <h2 className={css(styles.header)}>About</h2>
+      <p className={css(styles.lead)}>
+        This is an example react application (master-detail feed) with isomorphic rendering, async react-router routes, async redux reducers, async data fetching, and code-splitting.
+      </p>
+      <h2 className={css(styles.header)}>Motivation</h2>
+      <p className={css(styles.lead)}>
+        The file size of isomorphic React apps can quickly get out of hand. Many isomorphic starter kits look awesome to begin with but yield a several megabyte javascript
+        file for the client to download. This project aims to demonstrate some possible solutions.
+      </p>
+      <h2 className={css(styles.header)}>Under the Hood</h2>
+      <ul className={css(styles.list)}>
+        {data.map((item, i) => (
+          <li key={i}>
+            <h3><a className={css(styles.link)} href={item.link} target='_blank'>{item.resource}</a></h3>
+            <p className={css(styles.body)}>{item.description}</p>
+          </li>
+         ))}
+      </ul>
+    </div>
+  )
+}
+
+Home.contextTypes = { renderer: PropTypes.object }
+
+Home.propTypes = {
+  styles: PropTypes.object
+}
 
 const styles = StyleSheet.create({
   header: {
@@ -69,4 +79,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Home
+const mapStylesToProps = props => renderer => (styles)
+
+export default connect(mapStylesToProps)(Home)

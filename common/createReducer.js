@@ -1,16 +1,12 @@
 import { combineReducers } from 'redux'
-const initialState = {
-  host: '',
-  protocol: ''
-}
-
-const sourceRequest = (state = initialState, action) => state
+import device from './device/reducer'
 
 // Only combine reducers needed for initial render, others will be
 // added async
-export default function createReducer (asyncReducers) {
+export default function createReducer (platformReducers, asyncReducers) {
   return combineReducers({
-    sourceRequest,
-    ...asyncReducers
+    ...platformReducers,
+    ...asyncReducers,
+    device
   })
 }

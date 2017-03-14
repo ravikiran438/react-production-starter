@@ -6,18 +6,45 @@ import ReactDOM from 'react-dom'
 import Router from 'react-router/lib/Router'
 import match from 'react-router/lib/match'
 import browserHistory from 'react-router/lib/browserHistory'
-import { Provider } from 'react-redux'
-import { StyleSheet } from 'aphrodite'
 
+import { ApolloProvider } from 'react-apollo'
+import createApolloClient from '../common/createApolloClient'
+// import getNetworkInterface from '../server/transport'
+import { createBatchingNetworkInterface } from 'apollo-client'
 import { configureStore } from '../common/store'
+import { Provider as Fela } from 'react-fela'
+import configureFela from '../common/configureFela'
+
 const initialState = window.INITIAL_STATE || {}
+
+const networkInterface = createBatchingNetworkInterface({
+  uri: '/graphql',
+  opts: {
+    credentials: 'same-origin'
+  },
+  batchInterval: 20
+})
+
+const apolloClient = createApolloClient({
+  // networkInterface: getNetworkInterface(),
+  networkInterface,
+  initialState,
+  ssrForceFetchDelay: 100
+})
+
 // Set up Redux (note: this API requires redux@>=3.1.0):
-const store = configureStore(initialState)
+const store = configureStore({
+  initialState,
+  platformReducers: { apollo: apolloClient.reducer() },
+  platformMiddleware: [ apolloClient.middleware() ]
+})
 const { dispatch } = store
 
 const container = document.getElementById('root')
 
-StyleSheet.rehydrate(window.renderedClassNames)
+const felaRenderer = configureFela(document.getElementById('font-stylesheet'))
+
+const mountNode = document.getElementById('stylesheet')
 
 const render = () => {
   const { pathname, search, hash } = window.location
@@ -34,9 +61,11 @@ const render = () => {
     // We need to have a random in development because of `match`'s dependency on
     // `routes.` Normally, we would want just one file from which we require `routes` from.
     ReactDOM.render(
-      <Provider store={store}>
-        <Router routes={routes} history={browserHistory} key={Math.random()} />
-      </Provider>,
+      <ApolloProvider store={store} client={apolloClient}>
+        <Fela renderer={felaRenderer} mountNode={mountNode}>
+          <Router routes={routes} history={browserHistory} key={Math.random()} />
+        </Fela>
+      </ApolloProvider>,
       container
     )
   })

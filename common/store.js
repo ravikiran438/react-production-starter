@@ -3,11 +3,18 @@ import thunk from 'redux-thunk'
 import axios from 'axios'
 import createReducer from './createReducer'
 
-export function configureStore (initialState) {
-  let store = createStore(createReducer(), initialState, compose(
-    applyMiddleware(
-      thunk.withExtraArgument({ axios })
-    ),
+export function configureStore (options) {
+  const {
+    initialState,
+    platformMiddleware = [],
+    platformReducers = {}
+  } = options
+  const middleware = [
+    thunk.withExtraArgument({ axios }),
+    ...platformMiddleware
+  ]
+  let store = createStore(createReducer(platformReducers), initialState, compose(
+    applyMiddleware(...middleware),
 
     process.env.NODE_ENV === 'development' &&
     typeof window === 'object' &&
@@ -15,12 +22,15 @@ export function configureStore (initialState) {
       ? window.devToolsExtension()
       : f => f
   ))
-
+  store.platformReducers = platformReducers
   store.asyncReducers = {}
 
   if (process.env.NODE_ENV === 'development') {
     if (module.hot) {
-      module.hot.accept('./createReducer', () => store.replaceReducer(require('./createReducer').default))
+      module.hot.accept('./createReducer', () => {
+        const createReducer = require('./createReducer').default
+        store.replaceReducer(createReducer(platformReducers))
+      })
     }
   }
 
@@ -29,5 +39,5 @@ export function configureStore (initialState) {
 
 export function injectAsyncReducer (store, name, asyncReducer) {
   store.asyncReducers[name] = asyncReducer
-  store.replaceReducer(createReducer(store.asyncReducers))
+  store.replaceReducer(createReducer(store.platformReducers, store.asyncReducers))
 }
