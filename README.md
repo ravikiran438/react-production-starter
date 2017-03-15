@@ -25,11 +25,15 @@ The file size of isomorphic React apps can quickly get out of hand. Many isomorp
  - [How to dynamically load reducers for code splitting in a Redux application?](http://stackoverflow.com/questions/32968016/how-to-dynamically-load-reducers-for-code-splitting-in-a-redux-application) by [@dan_abramov](https://twitter.com/dan_abramov)
 
 ### Getting started
+Requires node@6 and mongodb installed
 ```bash
-git clone https://github.com/jaredpalmer/react-production-starter MyApp
+git clone https://github.com/ravikiran438/react-production-starter MyApp
 cd MyApp
+git checkout develop
 npm install
-npm start
+npm run seed
+npm run build
+npm run start
 
 # Open localhost:5000
 ```
