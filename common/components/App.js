@@ -1,8 +1,12 @@
 import React, { PropTypes } from 'react'
 import Helmet from 'react-helmet'
 import Nav from './Nav'
+import Footer from './Footer'
 import { StyleSheet } from 'fela-tools'
 import { connect } from 'react-fela'
+import { compose } from 'ramda'
+import * as themes from '../themes'
+import common from './common'
 
 const App = ({ children, styles }, {renderer}) => {
   const css = (rule) => renderer.renderRule(rule)
@@ -12,9 +16,7 @@ const App = ({ children, styles }, {renderer}) => {
       <h1 className={css(styles.title)}>React Production Starter</h1>
       <Nav />
       {children}
-      <footer className={css(styles.footer)}>
-        Copyright © 2016 <a className={css(styles.footerLink)} href='http://twitter.com/jaredpalmer' target='_blank'>Jared Palmer</a>
-      </footer>
+      <Footer />
     </div>
   )
 }
@@ -38,19 +40,12 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     fontWeight: 'bold',
     fontSize: 56
-  },
-  footer: {
-    margin: '4rem auto',
-    textAlign: 'center',
-    color: '#b7b7b7'
-  },
-  footerLink: {
-    display: 'inline-block',
-    color: '#000',
-    textDecoration: 'none'
   }
 })
 
 const mapStylesToProps = props => renderer => (styles)
 
-export default connect(mapStylesToProps)(App)
+export default compose(
+  common({ themes }),
+  connect(mapStylesToProps)
+)(App)

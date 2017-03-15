@@ -3,37 +3,42 @@ import React, { PropTypes } from 'react'
 import { StyleSheet } from 'fela-tools'
 import { connect } from 'react-fela'
 import data from '../data'
+import { Link, Heading, Image } from '../../../components'
+import { Box, Text } from 'kilvin'
 
 // This is a static page. It uses an array to hold data about the resources
 // and maintain DRY
-const Home = ({styles}, {renderer}) => {
+const Home = ({styles}, {renderer, theme}) => {
   const css = (rule) => renderer.renderRule(rule)
   return (
-    <div>
-
-      <h2 className={css(styles.header)}>About</h2>
-      <p className={css(styles.lead)}>
-        This is an example react application (master-detail feed) with isomorphic rendering, async react-router routes, async redux reducers, async data fetching, and code-splitting.
-      </p>
-      <h2 className={css(styles.header)}>Motivation</h2>
-      <p className={css(styles.lead)}>
-        The file size of isomorphic React apps can quickly get out of hand. Many isomorphic starter kits look awesome to begin with but yield a several megabyte javascript
-        file for the client to download. This project aims to demonstrate some possible solutions.
-      </p>
-      <h2 className={css(styles.header)}>Under the Hood</h2>
-      <ul className={css(styles.list)}>
-        {data.map((item, i) => (
-          <li key={i}>
-            <h3><a className={css(styles.link)} href={item.link} target='_blank'>{item.resource}</a></h3>
-            <p className={css(styles.body)}>{item.description}</p>
-          </li>
-         ))}
-      </ul>
-    </div>
+    <Box grow justifyContent='center'>
+      <div>
+        <h2 className={css(styles.header)}>About</h2>
+        <p className={css(styles.lead)}>
+          This is an example react application (master-detail feed) with isomorphic rendering, async react-router routes, async redux reducers, async data fetching, and code-splitting.
+        </p>
+        <h2 className={css(styles.header)}>Motivation</h2>
+        <p className={css(styles.lead)}>
+          The file size of isomorphic React apps can quickly get out of hand. Many isomorphic starter kits look awesome to begin with but yield a several megabyte javascript
+          file for the client to download. This project aims to demonstrate some possible solutions.
+        </p>
+        <h2 className={css(styles.header)}>Under the Hood</h2>
+        <ul className={css(styles.list)}>
+          {data.map((item, i) => (
+            <li key={i}>
+              <Heading is='h3'><Link className={css(styles.link)} to={item.link}>{item.resource}</Link></Heading>
+              <Image src={`http://placeholdit.imgix.net/~text?txtsize=23&bg=${333333 + i * 20}&txtclr=000000&txt=250%C3%97250&w=250&h=250`} />
+              <p className={css(styles.body)}>{item.description}</p>
+            </li>
+           ))}
+        </ul>
+        <Text style={theme.text.base} is='p'>The is a Text Component</Text>
+      </div>
+    </Box>
   )
 }
 
-Home.contextTypes = { renderer: PropTypes.object }
+Home.contextTypes = { renderer: PropTypes.object, theme: PropTypes.object }
 
 Home.propTypes = {
   styles: PropTypes.object

@@ -31,6 +31,7 @@ import createRoutes from '../common/routes/root'
 import createInitialState from './createInitialState'
 import { Provider as Fela } from 'react-fela'
 import configureFela from '../common/configureFela'
+import 'isomorphic-fetch'
 
 mongoose.Promise = Promise
 
